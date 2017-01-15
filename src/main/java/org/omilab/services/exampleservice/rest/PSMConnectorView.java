@@ -89,49 +89,11 @@ public final class PSMConnectorView {
 		Writer out = new StringWriter();
 		try {
 			temp.process(input, out);
-			System.err.println(out.toString());
 		} catch (TemplateException e) {
 			System.err.println("Template exception");
 		} catch (IOException e) {
 			System.err.println("Template IO Exception");
 		}
-
-
-
-		final StringBuilder sb = new StringBuilder();
-		sb.append("<div class=\"panel panel-default\"><div class=\"panel-body\">");
-		sb.append(pageRepo.findByInstanceAndEndpoint(instanceid,endpoint).getContent());
-
-		sb.append(
-				"<link rel=\"stylesheet\" href=\"https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css\">\n" +
-				"\n" +
-				//"<div data-role=\"page\" id=\"pageone\">\n" +
-				"  <div data-role=\"header\">\n" +
-				"    <h1>Collapsible Blocks</h1>\n" +
-				"  </div>\n" +
-				"  <div data-role=\"main\" class=\"ui-content\">" +
-				"\n");
-
-		Set<Post> postSet = posts.getPosts();
-
-		for ( Post p : postSet ) {
-			sb.append(
-					"    <div data-role=\"collapsible\">\n" +
-					"      <h1>Post "+ p.getPostId() +"</h1>\n" +
-					      		p.toString() +
-					"    </div>\n"
-					);
-		}
-
-		sb.append(
-				"<div data-role=\"footer\"> "+
-				"<h1>Insert Footer Text Here</h1>" +
-				"</div>" +
-				"</div> " +
-				"</div></div>");
-
-		//Close Main-Panel
-		sb.append("</div></div>");
 
 		return new GenericServiceContent(out.toString(), new HashMap<String,String>());
 	}

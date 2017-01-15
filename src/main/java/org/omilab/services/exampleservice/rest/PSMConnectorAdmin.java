@@ -2,9 +2,12 @@ package org.omilab.services.exampleservice.rest;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import org.omilab.services.exampleservice.model.GenericRequest;
 import org.omilab.services.exampleservice.model.GenericServiceContent;
+import org.omilab.services.exampleservice.model.Post;
+import org.omilab.services.exampleservice.model.Topic;
 import org.omilab.services.exampleservice.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @Path("/admin")
@@ -80,29 +88,24 @@ public final class PSMConnectorAdmin {
 			return new GenericServiceContent("Not allowed!");
 		}
 
-		if(request.getParams().get("subject") != null && request.getParams().get("text") != null)
-			posts.createPost(Long.valueOf(1), request.getParams().get("subject"), request.getParams().get("text"),request.getUsername());
+		if(request.getParams().get("topic_name") != null )
+			topics.createTopic(request.getParams().get("topic_name"));
 
 
+		Map<String, Object> input = new HashMap<String, Object>();
+//		Set<Topic> alleTopics = topics.getTopics();
+//		input.put("posts", allePosts);
+//		input.put("topics",alleTopics);
+		Writer out = new StringWriter();
+		try {
+			temp.process(input, out);
+		} catch (TemplateException e) {
+			System.err.println("Template exception");
+		} catch (IOException e) {
+			System.err.println("Template IO Exception");
+		}
 
-		final StringBuilder sb = new StringBuilder();
-		sb.append("<div class=\"panel panel-default\"><div class=\"panel-body\">");
-
-		sb.append("<form method=\"POST\" action=\"\">\n" +
-				"  Subject: <br>\n" +
-				"  <textarea name=\"subject\" cols=\"50\"></textarea><br><br>\n"
-				);
-
-		sb.append(
-				"  Text:<br>\n" +
-				"  <textarea name=\"text\" cols=\"100\"></textarea><br><br>\n" +
-				"  <input type=\"submit\">\n" +
-				"</form>"
-				);
-
-		sb.append("</div></div>");
-
-		return new GenericServiceContent(sb.toString());
+		return new GenericServiceContent(out.toString());
 	}
 
 }
