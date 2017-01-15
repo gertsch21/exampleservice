@@ -24,4 +24,6 @@ public interface PostRepository extends Repository<Post, Long> {
     @Query("select p from Post AS p")
     Set<Post> getPosts();
 
+    @Query("select p from Post p where p.subject = ?1")
+    Post findPostBySubject(String subject);
 }

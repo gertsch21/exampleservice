@@ -14,4 +14,6 @@ public interface PostMgmtService {
     public void createPost(long topicId, String subject, String text, String username);
 
     public Set<Post> getPosts( );
+
+    public Post getPostBySubject(String subject);
 }

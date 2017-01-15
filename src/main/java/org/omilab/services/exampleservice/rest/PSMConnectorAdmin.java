@@ -37,6 +37,7 @@ public final class PSMConnectorAdmin {
 	//freemarker
 	private final Configuration cfg;
 	private Template temp;
+	private String ergebnis;
 
 	private static final Logger logger = LoggerFactory.getLogger(PSMConnectorAdmin.class);
 
@@ -60,6 +61,7 @@ public final class PSMConnectorAdmin {
 		this.posts = posts;
 		this.comments = comments;
 		this.topics = topics;
+		this.ergebnis = "";
 
 		this.cfg = new Configuration(Configuration.VERSION_2_3_25);
 
@@ -68,7 +70,7 @@ public final class PSMConnectorAdmin {
 			this.cfg.setDefaultEncoding("UTF-8");
 			this.cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 			this.cfg.setLogTemplateExceptions(false);
-			this.temp = this.cfg.getTemplate("template.ftlh");
+			this.temp = this.cfg.getTemplate("templateAdmin.ftlh");
 		}catch(IOException e){
 			System.err.println("Verzeichnis freemarker not found");
 		}
@@ -88,14 +90,41 @@ public final class PSMConnectorAdmin {
 			return new GenericServiceContent("Not allowed!");
 		}
 
-		if(request.getParams().get("topic_name") != null )
+		if(request.getParams().get("topic_name") != null && request.getParams().get("topic_name").trim().length()!=0 ) {
 			topics.createTopic(request.getParams().get("topic_name"));
+			this.ergebnis = "Topic " + request.getParams().get("topic_name") + " erfolgreich angelegt!";
+		}
 
+		if(request.getParams().get("post_text") != null  && request.getParams().get("post_text").trim().length()!=0
+				&& request.getParams().get("post_subject") != null  && request.getParams().get("post_subject").trim().length()!=0) {
+
+			if(! (topics.getTopicByName(request.getParams().get("topic_name_post")) == null)){
+				posts.createPost( topics.getTopicByName(request.getParams().get("topic_name_post")).getTopicId() , request.getParams().get("post_subject") , request.getParams().get("post_text") , request.getUsername() );
+				this.ergebnis = "Post erfolgreich erzeugt!";
+			}else{
+				this.ergebnis = "Fehler bei Post anlegen(Topic existiert nicht)!!";
+			}
+		}
+
+
+		if(request.getParams().get("comment_text") != null  && request.getParams().get("comment_text").trim().length()!=0
+				&& request.getParams().get("comment_subject") != null  && request.getParams().get("comment_subject").trim().length()!=0) {
+
+			if(! (posts.getPostBySubject(request.getParams().get("post_subject_comment")) == null)){
+				comments.createComment(posts.getPostBySubject(request.getParams().get("post_subject_comment")).getPostId(),request.getParams().get("comment_subject"),request.getParams().get("comment_text"),request.getUsername());
+				this.ergebnis = "Comment erfolgreich erzeugt!";
+			}else{
+				this.ergebnis = "Fehler bei Comment anlegen(Post existiert nicht)!!";
+			}
+		}
 
 		Map<String, Object> input = new HashMap<String, Object>();
-//		Set<Topic> alleTopics = topics.getTopics();
-//		input.put("posts", allePosts);
-//		input.put("topics",alleTopics);
+		Set<Topic> alleTopics = topics.getTopics();
+		Set<Post> allePosts = posts.getPosts();
+		input.put("topics", alleTopics);
+		input.put("ergebnis",ergebnis);
+		input.put("posts",allePosts);
+
 		Writer out = new StringWriter();
 		try {
 			temp.process(input, out);

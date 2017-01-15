@@ -8,11 +8,12 @@
                         <ul>
                             <#list topic.posts as post>
                                 <li>
-                                    <h3>${post_index + 1}. ${post.text}(von ${post.author})</h3>
+                                    <h3>${post_index + 1}. ${post.subject}(von ${post.author})</h3>
+                                    <p>${post.text}</p>
                                     <ul>
                                         <#list post.comments as comment>
                                             <li>
-                                                <h3>${comment_index + 1}. ${comment.author}</h3>
+                                                <h4>${comment_index + 1}.  ${comment.subject}(von ${comment.author})</h4>
                                                 <p>${comment.text}</p>
                                              </li>
                                         </#list>

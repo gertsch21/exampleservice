@@ -14,4 +14,5 @@ public interface TopicMgmtService {
 
     public Set<Topic> getTopics( );
 
+    public Topic getTopicByName(String name);
 }

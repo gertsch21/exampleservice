@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public interface CommentMgmtService {
 
-    public void createComment( long postId, String subject, String text);
+    public void createComment( long postId, String subject, String text, String author);
 
     public Set<Comment> findCommentsByPostId( long postId );
 

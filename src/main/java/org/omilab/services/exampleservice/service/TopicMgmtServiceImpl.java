@@ -34,4 +34,7 @@ public class TopicMgmtServiceImpl implements TopicMgmtService {
 
     @Override
     public Set<Topic> getTopics(){ return topicRepo.getTopics();}
+
+    @Override
+    public Topic getTopicByName(String name){return topicRepo.findTopicByName(name);}
 }

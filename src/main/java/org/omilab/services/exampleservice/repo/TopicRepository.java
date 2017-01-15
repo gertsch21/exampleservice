@@ -24,5 +24,7 @@ public interface TopicRepository extends Repository<Topic, Long> {
     @Query("select t from Topic AS t")
     Set<Topic> getTopics();
 
+    @Query("select t from Topic t where t.name = ?1")
+    Topic findTopicByName(String name);
 
 }

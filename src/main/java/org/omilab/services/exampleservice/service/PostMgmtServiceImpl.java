@@ -45,4 +45,7 @@ public class PostMgmtServiceImpl implements PostMgmtService{
     public Set<Post> getPosts() {
         return postRepo.getPosts();
     }
+
+    @Override
+    public Post getPostBySubject(String subject){return postRepo.findPostBySubject(subject);}
 }

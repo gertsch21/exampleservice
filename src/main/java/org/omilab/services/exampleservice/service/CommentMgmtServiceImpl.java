@@ -37,9 +37,9 @@ public class CommentMgmtServiceImpl implements CommentMgmtService{
     }
 
     @Override
-    public void createComment( final long postId, final String subject, final String text) {
+    public void createComment( final long postId, final String subject, final String text, final String author) {
 
-        commRepo.save(new Comment(postRepo.findPostByPostId(postId), subject, text));
+        commRepo.save(new Comment(postRepo.findPostByPostId(postId), subject, text,author));
         //logService.logMessage(new LogMessage(user,"create","Post",id.toString()));
     }
 

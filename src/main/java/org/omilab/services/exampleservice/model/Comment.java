@@ -44,10 +44,11 @@ public class Comment {
                 '}';
     }
 
-    public Comment(Post post, String subject, String text) {
+    public Comment(Post post, String subject, String text, String author) {
         this.text = text;
         this.subject = subject;
         this.post = post;
+        this.author = author;
     }
 
     public Post getPost() {
